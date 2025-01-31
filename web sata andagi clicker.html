@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sata Andagi Clicker</title>
+    <style>
+        body {
+            text-align: center;
+            font-family: Arial, sans-serif;
+            position: relative;
+            overflow: hidden;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            flex-direction: column;
+            color: white;
+            background: url('background.jpg') no-repeat center center/cover;
+            background-size: cover;
+        }
+
+        body::after {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0);
+            backdrop-filter: blur(10px);
+            z-index: -1;
+        }
+
+        .click-btn {
+            cursor: pointer;
+            width: 150px;
+        }
+
+        .message {
+            position: absolute;
+            font-size: 20px;
+            font-weight: bold;
+            color: white;
+            opacity: 0;
+            transition: opacity 1s ease-in-out;
+        }
+
+        .top-right-button {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            padding: 10px 20px;
+            background-color: #007bff;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+
+        .video-container {
+            margin-top: 20px;
+            width: 560px;
+            height: 315px;
+        }
+
+        .gif {
+            position: absolute;
+            bottom: 40px;
+            left: 10px;
+            width: 100px;
+            height: auto;
+            z-index: 2;
+        }
+
+        /* Running text styling */
+        .running-text-container {
+            position: fixed; /* Fix it to the bottom of the screen */
+            bottom: 0;
+            left: 0;
+            width: 100vw; /* Full width of the screen */
+            overflow: hidden; /* Allow text overflow */
+            white-space: nowrap; /* Ensure it's one single line */
+            z-index: 1;
+        }
+
+        .running-text {
+            display: flex;
+            animation: scrollText 20s linear infinite;
+            font-size: 24px;
+            font-weight: bold;
+            color: yellow;
+            white-space: nowrap; /* Prevent text from breaking into multiple lines */
+        }
+
+        .running-text span {
+            padding-right: 50px; /* Space between text repetitions */
+        }
+
+        /* Ensure that the text scrolls from right to left */
+        @keyframes scrollText {
+            0% {
+                transform: translateX(100%); /* Starts from right */
+            }
+            100% {
+                transform: translateX(-100%); /* Ends at left */
+            }
+        }
+
+        /* Ensure that the second span is immediately next to the first, allowing seamless looping */
+        .running-text span:last-child {
+            padding-right: 0;
+        }
+    </style>
+</head>
+<body>
+    <!-- Add background music with autoplay functionality -->
+    <audio id="backgroundMusic" loop>
+        <source src="background-music.mp3" type="audio/mp3">
+        Your browser does not support the audio element.
+    </audio>
+
+    <button class="top-right-button" onclick="window.location.href='https://example.com'">Buy $SANDAGI</button>
+    <div class="container">
+        <h1>Sata Andagi Counter: <span id="counter">0</span></h1>
+        <img src="button.jpg" alt="Sata Andagi" class="click-btn" onclick="handleClick()">
+    </div>
+    <div class="video-container">
+        <iframe width="560" height="315" src="https://www.youtube.com/embed/6hdxb8b2m1k?si=_E6j1zrpmeM4SwRi" frameborder="0" allowfullscreen></iframe>
+    </div>
+
+    <!-- Add the GIF container with random GIF source -->
+    <img id="randomGif" class="gif" alt="Random GIF">
+
+    <!-- Running text at the bottom -->
+    <div class="running-text-container">
+        <div class="running-text">
+            <span>BUY $SANDAGI NOW!!! | BUY $SANDAGI NOW!!! | BUY $SANDAGI NOW!!! | BUY $SANDAGI NOW!!!</span>
+        </div>
+    </div>
+
+    <script>
+        let count = 0;
+        const messagesAndSounds = [
+            { message: "omagaaa", sound: "sound1.mp3" },
+            { message: "amerika ya", sound: "sound2.mp3" },
+            { message: "halo", sound: "sound3.mp3" }
+        ];
+
+        // Function to play a sound using HTML Audio
+        function playSound(soundFile, volume = 1) {
+            const audio = new Audio(soundFile);
+            audio.volume = volume;  // Set volume to adjust the sound
+            audio.play();
+        }
+
+        // Randomly choose a GIF and set it as the source for the GIF image
+        function setRandomGif() {
+            const gifArray = [
+                "gif1.gif", "gif2.gif", "gif3.gif", "gif4.gif", "gif5.gif", "gif6.gif"
+            ];
+
+            const randomIndex = Math.floor(Math.random() * gifArray.length);
+            const gifSrc = gifArray[randomIndex];
+
+            // Set the source of the random GIF
+            document.getElementById("randomGif").src = gifSrc;
+        }
+
+        // Call the setRandomGif function when the page loads
+        setRandomGif();
+
+        // Play background music on page load, after user interaction
+        window.addEventListener('click', function() {
+            const backgroundMusic = document.getElementById('backgroundMusic');
+            backgroundMusic.volume = 0.3;  // Set background music volume to 30%
+            backgroundMusic.play();
+        });
+
+        function handleClick() {
+            count++;
+            document.getElementById("counter").innerText = count;
+            playSound('click-sound.mp3', 0.3);
+
+            if (count % 10 === 0) {
+                const randomIndex = Math.floor(Math.random() * messagesAndSounds.length);
+                const { message, sound } = messagesAndSounds[randomIndex];
+
+                const messageElement = document.createElement("p");
+                messageElement.classList.add("message");
+                messageElement.innerText = message;
+
+                const randomX = Math.random() * (window.innerWidth - 200);
+                const randomY = Math.random() * (window.innerHeight - 100);
+                messageElement.style.left = `${randomX}px`;
+                messageElement.style.top = `${randomY}px`;
+
+                document.body.appendChild(messageElement);
+
+                setTimeout(() => {
+                    messageElement.style.opacity = 1;
+                }, 100);
+
+                setTimeout(() => {
+                    messageElement.style.opacity = 0;
+                    setTimeout(() => {
+                        document.body.removeChild(messageElement);
+                    }, 1000);
+                }, 2000);
+
+                playSound(sound, 1);
+            }
+        }
+    </script>
+</body>
+</html>
